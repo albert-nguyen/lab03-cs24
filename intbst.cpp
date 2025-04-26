@@ -1,121 +1,234 @@
-// intbst.cpp
-// Implements class IntBST
-// YOUR NAME(S), DATE
-
 #include "intbst.h"
-
 #include <iostream>
 using std::cout;
 
 // constructor sets up empty tree
-IntBST::IntBST() { 
-
+IntBST::IntBST() {
+    root = nullptr;
 }
 
 // destructor deletes all nodes
 IntBST::~IntBST() {
-
+    clear(root);
 }
 
 // recursive helper for destructor
-void IntBST::clear(Node *n) {
-
+void IntBST::clear(Node* n) {
+    if (n != nullptr) {
+        clear(n->left);
+        clear(n->right);
+        delete n;
+    }
 }
 
 // insert value in tree; return false if duplicate
 bool IntBST::insert(int value) {
-    return false; // REPLACE THIS NON-SOLUTION
+    if (root == nullptr) {
+        root = new Node(value);
+        return true;
+    }
+    return insert(value, root);  // Calls the private helper
 }
 
-// recursive helper for insert (assumes n is never 0)
-bool IntBST::insert(int value, Node *n) {
-    return false; // REPLACE THIS NON-SOLUTION
+// recursive helper for insert (assumes n is never nullptr)
+bool IntBST::insert(int value, Node* n) {
+    if (value == n->info) {  // Replaced 'data' with 'info'
+        return false;  // Duplicate value
+    } else if (value < n->info) {  // Replaced 'data' with 'info'
+        if (n->left == nullptr) {
+            n->left = new Node(value);
+            n->left->parent = n;  // Set parent pointer
+            return true;
+        }
+        return insert(value, n->left);  // Recur on the left child
+    } else {
+        if (n->right == nullptr) {
+            n->right = new Node(value);
+            n->right->parent = n;  // Set parent pointer
+            return true;
+        }
+        return insert(value, n->right);  // Recur on the right child
+    }
 }
 
 // print tree data pre-order
 void IntBST::printPreOrder() const {
-    cout << "IMPLEMENT printPreOrder public method";; // IMPLEMENT HERE
+    printPreOrder(root);  // Call the helper function
 }
 
-// recursive helper for printPreOrder()
-void IntBST::printPreOrder(Node *n) const {
-    cout << "IMPLEMENT printPreOrder private helper method"; // IMPLEMENT HERE
+// recursive helper for printPreOrder
+void IntBST::printPreOrder(Node* n) const {
+    if (n != nullptr) {
+        cout << n->info << " ";  // Replaced 'data' with 'info'
+        printPreOrder(n->left);
+        printPreOrder(n->right);
+    }
 }
 
-// print tree data in-order, with helper
+// print tree data in-order
 void IntBST::printInOrder() const {
-    cout << "IMPLEMENT printInOrder public method"; // IMPLEMENT HERE
-}
-void IntBST::printInOrder(Node *n) const {
-    cout << "IMPLEMENT IMPLEMENT printInOrder private helper method"; // IMPLEMENT HERE
+    printInOrder(root);  // Call the helper function
 }
 
-// prints tree data post-order, with helper
+// recursive helper for printInOrder
+void IntBST::printInOrder(Node* n) const {
+    if (n != nullptr) {
+        printInOrder(n->left);
+        cout << n->info << " ";  // Replaced 'data' with 'info'
+        printInOrder(n->right);
+    }
+}
+
+// print tree data post-order
 void IntBST::printPostOrder() const {
-    cout << "IMPLEMENT printPostOrder public method"; // IMPLEMENT HERE
+    printPostOrder(root);  // Call the helper function
 }
 
-void IntBST::printPostOrder(Node *n) const {
-    cout << "IMPLEMENT printPostOrder private helper method";// IMPLEMENT HERE
+// recursive helper for printPostOrder
+void IntBST::printPostOrder(Node* n) const {
+    if (n != nullptr) {
+        printPostOrder(n->left);
+        printPostOrder(n->right);
+        cout << n->info << " ";  // Replaced 'data' with 'info'
+    }
 }
 
 // return sum of values in tree
 int IntBST::sum() const {
-    return -1; // REPLACE THIS NON-SOLUTION
+    return sum(root);  // Call the helper function
 }
 
 // recursive helper for sum
-int IntBST::sum(Node *n) const {
-    return -1; // REPLACE THIS NON-SOLUTION
+int IntBST::sum(Node* n) const {
+    if (n == nullptr) {
+        return 0;
+    }
+    return n->info + sum(n->left) + sum(n->right);  // Replaced 'data' with 'info'
 }
 
 // return count of values
 int IntBST::count() const {
-    return -1; // REPLACE THIS NON-SOLUTION
+    return count(root);  // Call the helper function
 }
 
 // recursive helper for count
-int IntBST::count(Node *n) const {
-    return -1; // REPLACE THIS NON-SOLUTION
+int IntBST::count(Node* n) const {
+    if (n == nullptr) {
+        return 0;
+    }
+    return 1 + count(n->left) + count(n->right);  // Replaced 'data' with 'info'
 }
 
-// IMPLEMENT THIS FIRST: returns the node for a given value or NULL if none exists
-// Parameters:
-// int value: the value to be found
-// Node* n: the node to start with (for a recursive call)
-// Whenever you call this method from somewhere else, pass it
-// the root node as "n"
-IntBST::Node* IntBST::getNodeFor(int value, Node* n) const{
-    return NULL; // REPLACE THIS NON-SOLUTION
+// returns the node for a given value or NULL if none exists
+IntBST::Node* IntBST::getNodeFor(int value, Node* n) const {
+    if (n == nullptr) {
+        return nullptr;
+    }
+    if (value == n->info) {  // Replaced 'data' with 'info'
+        return n;
+    } else if (value < n->info) {  // Replaced 'data' with 'info'
+        return getNodeFor(value, n->left);
+    } else {
+        return getNodeFor(value, n->right);
+    }
 }
 
 // returns true if value is in the tree; false if not
 bool IntBST::contains(int value) const {
-    return false; // REPLACE THIS NON-SOLUTION
+    return getNodeFor(value, root) != nullptr;
 }
 
 // returns the Node containing the predecessor of the given value
-IntBST::Node* IntBST::getPredecessorNode(int value) const{
-    return NULL; // REPLACE THIS NON-SOLUTION
+IntBST::Node* IntBST::getPredecessorNode(int value) const {
+    Node* current = getNodeFor(value, root);
+    if (current == nullptr) {
+        return nullptr;
+    }
+
+    if (current->left != nullptr) {
+        current = current->left;
+        while (current->right != nullptr) {
+            current = current->right;
+        }
+        return current;
+    }
+
+    Node* parent = current->parent;
+    while (parent != nullptr && current == parent->left) {
+        current = parent;
+        parent = parent->parent;
+    }
+    return parent;
 }
 
 // returns the predecessor value of the given value or 0 if there is none
-int IntBST::getPredecessor(int value) const{
-    return -1; // REPLACE THIS NON-SOLUTION
+int IntBST::getPredecessor(int value) const {
+    Node* predNode = getPredecessorNode(value);
+    return predNode ? predNode->info : 0;  // Replaced 'data' with 'info'
 }
 
 // returns the Node containing the successor of the given value
-IntBST::Node* IntBST::getSuccessorNode(int value) const{
-    return NULL; // REPLACE THIS NON-SOLUTION
+IntBST::Node* IntBST::getSuccessorNode(int value) const {
+    Node* current = getNodeFor(value, root);
+    if (current == nullptr) {
+        return nullptr;
+    }
+
+    if (current->right != nullptr) {
+        current = current->right;
+        while (current->left != nullptr) {
+            current = current->left;
+        }
+        return current;
+    }
+
+    Node* parent = current->parent;
+    while (parent != nullptr && current == parent->right) {
+        current = parent;
+        parent = parent->parent;
+    }
+    return parent;
 }
 
 // returns the successor value of the given value or 0 if there is none
-int IntBST::getSuccessor(int value) const{
-    return -1; // REPLACE THIS NON-SOLUTION
+int IntBST::getSuccessor(int value) const {
+    Node* succNode = getSuccessorNode(value);
+    return succNode ? succNode->info : 0;  // Replaced 'data' with 'info'
 }
 
 // deletes the Node containing the given value from the tree
-// returns true if the node exist and was deleted or false if the node does not exist
-bool IntBST::remove(int value){
-    return false; // REPLACE THIS NON-SOLUTION
+bool IntBST::remove(int value) {
+    return remove(value, root);  // Calls the private helper
+}
+
+// private helper for remove
+bool IntBST::remove(int value, Node*& n) {
+    if (n == nullptr) {
+        return false;
+    }
+    if (value < n->info) {  // Replaced 'data' with 'info'
+        return remove(value, n->left);
+    } else if (value > n->info) {  // Replaced 'data' with 'info'
+        return remove(value, n->right);
+    }
+
+    // Node found
+    if (n->left == nullptr && n->right == nullptr) {
+        delete n;
+        n = nullptr;
+    } else if (n->left == nullptr) {
+        Node* temp = n;
+        n = n->right;
+        delete temp;
+    } else if (n->right == nullptr) {
+        Node* temp = n;
+        n = n->left;
+        delete temp;
+    } else {
+        Node* succNode = getSuccessorNode(n->info);
+        n->info = succNode->info;  // Replace info with successor value
+        remove(succNode->info, n->right);
+    }
+
+    return true;
 }
