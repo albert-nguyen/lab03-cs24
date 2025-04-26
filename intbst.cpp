@@ -142,58 +142,62 @@ bool IntBST::contains(int value) const {
 IntBST::Node* IntBST::getPredecessorNode(int value) const {
     Node* current = getNodeFor(value, root);
     if (current == nullptr) {
-        return nullptr;
+        return nullptr;  // Node not found
     }
 
+    // Case 1: If there is a left subtree, the predecessor is the rightmost node of the left subtree
     if (current->left != nullptr) {
         current = current->left;
         while (current->right != nullptr) {
             current = current->right;
         }
-        return current;
+        return current;  // The rightmost node in the left subtree
     }
 
+    // Case 2: If there is no left subtree, move up to the parent and keep checking
     Node* parent = current->parent;
     while (parent != nullptr && current == parent->left) {
         current = parent;
         parent = parent->parent;
     }
-    return parent;
+    return parent;  // If we find a parent where current is not the left child, return that parent
 }
 
 // returns the predecessor value of the given value or 0 if there is none
 int IntBST::getPredecessor(int value) const {
     Node* predNode = getPredecessorNode(value);
-    return predNode ? predNode->info : 0;  // Replaced 'data' with 'info'
+    return predNode ? predNode->info : 0;  // Return 0 if there is no predecessor
 }
 
 // returns the Node containing the successor of the given value
 IntBST::Node* IntBST::getSuccessorNode(int value) const {
     Node* current = getNodeFor(value, root);
     if (current == nullptr) {
-        return nullptr;
+        return nullptr;  // Node not found
     }
 
+    // Case 1: If there is a right subtree, the successor is the leftmost node of the right subtree
     if (current->right != nullptr) {
         current = current->right;
         while (current->left != nullptr) {
             current = current->left;
         }
-        return current;
+        return current;  // The leftmost node in the right subtree
     }
 
+    // Case 2: If there is no right subtree, move up to the parent and keep checking
     Node* parent = current->parent;
     while (parent != nullptr && current == parent->right) {
         current = parent;
         parent = parent->parent;
     }
-    return parent;
+    return parent;  // If we find a parent where current is not the right child, return that parent
 }
 
 // returns the successor value of the given value or 0 if there is none
 int IntBST::getSuccessor(int value) const {
     Node* succNode = getSuccessorNode(value);
-    return succNode ? succNode->info : 0;  // Replaced 'data' with 'info'
+    return succNode ? succNode->info : 0;  // Return 0 if there is no successor
 }
 
 // deletes the Node containing the given value from the tree
