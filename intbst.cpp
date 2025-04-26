@@ -150,7 +150,6 @@ IntBST::Node* IntBST::getPredecessorNode(int value) const {
         while (current->right != nullptr) {
             current = current->right;
         }
-        cout << "Predecessor node: " << current->info << "\n"; // Debug print
         return current;
     }
 
@@ -159,7 +158,6 @@ IntBST::Node* IntBST::getPredecessorNode(int value) const {
         current = parent;
         parent = parent->parent;
     }
-    cout << "Predecessor parent node: " << (parent ? parent->info : -1) << "\n"; // Debug parent pointer
     return parent;
 }
 
@@ -181,7 +179,6 @@ IntBST::Node* IntBST::getSuccessorNode(int value) const {
         while (current->left != nullptr) {
             current = current->left;
         }
-        cout << "Successor node: " << current->info << "\n"; // Debug print
         return current;
     }
 
@@ -190,7 +187,6 @@ IntBST::Node* IntBST::getSuccessorNode(int value) const {
         current = parent;
         parent = parent->parent;
     }
-    cout << "Successor parent node: " << (parent ? parent->info : -1) << "\n"; // Debug parent pointer
     return parent;
 }
 
@@ -210,9 +206,9 @@ bool IntBST::remove(int value, Node*& n) {
     if (n == nullptr) {
         return false;
     }
-    if (value < n->info) {
+    if (value < n->info) {  // Replaced 'data' with 'info'
         return remove(value, n->left);
-    } else if (value > n->info) {
+    } else if (value > n->info) {  // Replaced 'data' with 'info'
         return remove(value, n->right);
     }
 
@@ -223,17 +219,14 @@ bool IntBST::remove(int value, Node*& n) {
     } else if (n->left == nullptr) {
         Node* temp = n;
         n = n->right;
-        n->parent = temp->parent;  // Correctly set parent pointer
         delete temp;
     } else if (n->right == nullptr) {
         Node* temp = n;
         n = n->left;
-        n->parent = temp->parent;  // Correctly set parent pointer
         delete temp;
     } else {
-        // Find successor node and replace value
         Node* succNode = getSuccessorNode(n->info);
-        n->info = succNode->info;
+        n->info = succNode->info;  // Replace info with successor value
         remove(succNode->info, n->right);
     }
 
